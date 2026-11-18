@@ -36,6 +36,8 @@ In the four- and six-pack you approve the spec before any code is written: the s
 
 Every stage ends by auditing its own work: a requirement → evidence table (scenario → test, function → CRAP score, file → mutation result, QA step → verdict), and a report with a missing table or an unexplained gap goes back to that stage. The hardener also mutates `Scenario Outline` example values, and QA fails any scenario ID that no test carries.
 
+The coder works strictly test-first: a red test, confirmed red because the behaviour is missing, then only as much code as turns it green. Where the only possible test would be a dishonest one it writes none and says so in its report. It settles the data shape before the logic, removes complexity before it adds any, and reproduces a bug with a failing test before it fixes the cause. The architect also checks that the types cannot hold a state the domain forbids, that an operation can be repeated or re-run after dying partway, that shared mutable state has exactly one writer enforced by structure, and that names match the project's glossary when it has one (the specifier uses the same glossary). The hardener deletes and replaces any test that stays green when the functions under test return nothing, and bounces dead code that mutation reveals. The cleaner's duplication pass uses the project's own duplication tool where one is configured. Before a third attempt at the same bounced finding, the owning stage writes the assumption the two failed fixes shared, and the next attempt must not rest on it.
+
 Flags: `--no-gate` (skip the spec gate), `--model <alias>` (run every stage on one model), `--restart` (ignore saved state).
 
 - **Per-stage models**: specifier, architect and hardener run on `opus` (mistakes there propagate); coder, cleaner and QA on `sonnet` (volume work). Set in each agent's frontmatter.
@@ -55,7 +57,7 @@ Given an issue reference it runs in **ticket mode**: claims the issue, opens a d
 
 ## Credits
 
-The gauntlet's roles and several of its rules are inspired by Robert C. Martin's [swarm-forge](https://github.com/unclebob/swarm-forge). The text here is my own.
+The gauntlet's roles and several of its rules are inspired by Robert C. Martin's [swarm-forge](https://github.com/unclebob/swarm-forge). How each stage approaches a change (strict test-first, data shape before logic, illegal states, repeatable operations, one writer) is inspired by his [ub-mode](https://github.com/unclebob/ub-mode). The text here is my own.
 
 ## Development
 

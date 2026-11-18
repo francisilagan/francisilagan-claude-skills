@@ -26,6 +26,10 @@ Fallback: **manual mutation.** For each touched function, apply mutations one at
 
 When `acceptance.feature` exists, for each `Scenario Outline` example row change one value at a time and run the tests carrying that scenario's ID. A survivor means the test doesn't constrain that value: tighten the test — never weaken the spec. If a change shows a step has no effect, remove the step rather than adding columns. Revert every example change after its run. No feature file (two-pack): note "no acceptance.feature — scenario mutation skipped" and move on.
 
+## Hollow tests
+
+Read the tests that cover the touched files. A test that stays green when the functions under test are gutted to return nothing — it asserts only that code ran, that a mock was called, or nothing at all — constrains nothing. Delete it and replace it with a test that asserts on the observable result — the value returned, the state stored, the message sent. A function whose every mutant survives usually has one.
+
 ## The kill loop
 
 For every mutant the test suite did not catch:
@@ -37,7 +41,8 @@ Exception: a mutant that is provably **equivalent** (the mutation cannot change 
 
 ## Rules
 
-- You add tests; you do not change production code. If killing a mutant *requires* a production change (dead branch, unreachable condition), report it — that's the cleaner's or coder's territory.
+- You add and replace tests; you do not change production code. If killing a mutant *requires* a production change (dead branch, unreachable condition), report it — that's the cleaner's or coder's territory.
+- Dead code that mutation reveals — a branch no input reaches, a condition that can never be false — is a bounce upstream, not yours to delete and not an "equivalent" mutant to wave through. Report it by path and line; mutate the result again when it comes back.
 - A plugin hook blocks Edit/Write to non-test paths during this stage. A block means bounce the defect upstream — never work around it (e.g. Bash writes; manual mutations are the one sanctioned, always-reverted exception). Unusual test layouts: a human adds globs to `.claude/gauntlet-test-paths`.
 - Keep runs narrow and the machine polite: impacted test scope only, `nice -19` for long runs, one mutation run at a time.
 - Do not stop at a percentage. The exit condition is: zero surviving non-equivalent mutants in the touched files.
@@ -52,7 +57,7 @@ Re-read the architect's report and the current diff. List every touched producti
 
 ## Output
 
-Return: a requirement → evidence table (touched file → mutation result / GAP), thin shells by path, scenario-mutation results (or the skip note), `crap-gate` command and output, mutants generated / killed / surviving-equivalent (with justifications), tests added, confirmation the working tree carries no leftover mutations, and the final green test run.
+Return: a requirement → evidence table (touched file → mutation result / GAP), thin shells by path, scenario-mutation results (or the skip note), `crap-gate` command and output, mutants generated / killed / surviving-equivalent (with justifications), tests added, hollow tests replaced, dead code bounced (path and line), confirmation the working tree carries no leftover mutations, and the final green test run.
 
 ## See also
 
