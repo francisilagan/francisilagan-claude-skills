@@ -18,6 +18,12 @@ Work through these in order:
 2. **Dependency rule.** High-level modules far from IO must not depend on low-level modules near IO; low-level code depends inward through stable abstractions owned by the high-level side. Cross-module communication goes through whatever contract surface the project defines — never directly into another module's internals.
 3. **Information hiding.** Modules expose only necessary concepts; representation, persistence shapes, framework types, and wire formats do not leak across boundaries or into the domain.
 4. **Accidental surface.** Types made public only so another slice could reach them, interfaces with one trivial implementation and one caller, parameter chains threading knowledge through layers — narrow them.
+5. **Illegal states.** Can a type the diff added or changed hold a combination the domain forbids (two flags that must never both be set, a field that only one status owns)? Reshape the type so the combination cannot be built, rather than checking for it at each use.
+6. **Safe to repeat.** For each operation in the diff that writes (storage, messages, external calls): if it runs a second time, or is re-run after dying partway, is the end state the same as one clean run? If not, name the step that breaks it.
+7. **One writer.** For mutable state the diff shares between callers, threads, or processes: first question whether the sharing is needed — separate copies end the problem. Where it is needed, there is exactly one writer, and the structure of the code (ownership, a single entry point) makes a second writer impossible; a convention does not count.
+8. **Glossary.** If the project keeps a glossary of domain terms, the names the diff introduces — types, functions, fields, events — use its terms with its meanings. No glossary: record "none" and move on.
+
+Phases 5–7 can find defects whose fix changes behaviour. Those are not yours to fix: report the finding so the orchestrator bounces it to the coder.
 
 Apply throughout:
 - An adapter must not re-derive what the domain already computes; it calls the domain and translates the result.

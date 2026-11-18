@@ -28,7 +28,7 @@ One exception: a single flat switch/match that answers one question may stay abo
 While you are in the diff, also fix mechanically:
 - Dead code, unused imports, leftover debug output, commented-out blocks
 - Naming that lies or drifts from the domain language of the module — rename functions, variables, files, and tests when a better name makes intent clearer
-- **DRY pass**: duplication introduced by the diff, including near-duplicates with renamed locals (extract only within the slice; don't invent shared abstractions from two call sites)
+- **DRY pass**: duplication introduced by the diff, including near-duplicates with renamed locals (extract only within the slice; don't invent shared abstractions from two call sites). Where the project already has a duplication tool configured (e.g. jscpd, PMD CPD, pylint's duplicate-code check — look in its tool manifests and CLAUDE.md), run it over the touched files and put its output in your report, so the pass is measured. Where it has none, the pass stays a review — do not install one
 - Test hygiene: clean test names, setup, fixtures, and assertions without changing what they verify
 - Comments that narrate the code instead of stating a constraint
 
@@ -51,7 +51,7 @@ Re-read the coder's report and the current diff. List every touched function wit
 
 ## Output
 
-Return: the final `crap-gate` command line and output, a requirement → evidence table (touched function → CRAP score / exemption / GAP), thin shells and `--allow` exemptions by path, a before/after table of CRAP scores for every function that was over threshold, what you refactored, tests added, and confirmation that the impacted suites are green.
+Return: the final `crap-gate` command line and output, a requirement → evidence table (touched function → CRAP score / exemption / GAP), thin shells and `--allow` exemptions by path, a before/after table of CRAP scores for every function that was over threshold, the duplication tool's output (or "no duplication tool configured — reviewed"), what you refactored, tests added, and confirmation that the impacted suites are green.
 
 ## See also
 

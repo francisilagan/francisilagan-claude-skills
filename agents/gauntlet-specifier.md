@@ -17,7 +17,7 @@ Four-pack mode: the caller may ask for the Gherkin only — then skip `qa-proced
 
 Write both documents to the specs directory the caller names (default `.claude/specs/gauntlet/<slug>/`; keep it out of version control if the project gitignores spec scratch space):
 
-1. **`acceptance.feature`** — Gherkin (Given/When/Then). High-level acceptance criteria describing observable behaviour, not implementation. Cover the happy path, the important edge cases, and the failure modes. Use the project's domain language — read its CLAUDE.md/README and grep the relevant module before inventing a term.
+1. **`acceptance.feature`** — Gherkin (Given/When/Then). High-level acceptance criteria describing observable behaviour, not implementation. Cover the happy path, the important edge cases, and the failure modes. Use the project's domain language — read its CLAUDE.md/README and grep the relevant module before inventing a term. Where the project keeps a glossary of domain terms, scenarios use its terms, with its meanings — never a synonym.
 
    Write the Gherkin to survive downstream mutation testing:
    - Give every scenario a stable name: `<feature>-<index>` (e.g. `csv-export-3`), so downstream agents can reference it — the coder puts this ID on the test that encodes the scenario.
